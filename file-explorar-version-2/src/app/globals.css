@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  /* color: var(--foreground);
+  background: var(--background); */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* -----------------------------*/
+.App {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Container for each node */
+.outer {
+  border-left: 1px solid black;
+  margin-bottom: 4px;
+  margin-left: 12px;
+}
+
+/* Flex container for the icon and inline actions */
+.inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+.node {
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease-in-out;
+  border-radius: 4px;
+  width: 100%;  /* Ensures it takes full width */
+}
+
+
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;  /* Ensures inner elements do not collapse */
+}
+
+
+/* Container for the node name and buttons */
+.node-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease-in-out;
+}
+
+/* Styling for the node name */
+.filename {
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  flex-grow: 1; /* Ensure it takes available space */
+}
+
+/* Inline edit input styling */
+.editInput {
+  width: 140px;
+  padding: 4px 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Styling for the action icons */
+.addNode,
+.editNode,
+.deleteNode {
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: start;
+}
+
+.addInputContainer {
+  margin-left: 30px;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
