@@ -1,14 +1,7 @@
+
 import { useState, useRef, useEffect } from "react";
 
-const Input = ({
-  name = "",
-  id,
-  showInput,
-  setShowInput,
-  ShowEditInput,
-  setShowEditInput,
-  submit,
-}) => {
+const Input = ({ name = "", id, setShowInput, submit }) => {
   const [value, setValue] = useState(name);
   const inputRef = useRef(null);
 
@@ -16,40 +9,32 @@ const Input = ({
     setValue(e.target.value);
   };
 
-  const handleOutSideClick = (e) => {
-    if (inputRef.current && !inputRef.current.contains(e.target)) {
-      if (setShowInput) setShowInput(false);
-      if (ShowEditInput) setShowEditInput(false);
-    }
-  };
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      if (setShowInput) setShowInput(false);
-
-      submit(id, value);
+      submit(id, value); // Update before closing input
+      setShowInput(false);
     }
   };
-
   useEffect(() => {
-    document.addEventListener("mousedown", handleOutSideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutSideClick);
-    };
+    document.addEventListener("mousedown", (e) => {
+      if (inputRef.current && !inputRef.current.contains(e.target)) {
+        setShowInput(false);
+      }
+    });
+
+    return () => document.removeEventListener("mousedown", handleKeyDown);
   }, []);
 
   return (
-    <div className={ShowEditInput ? "" : "InputCompo"}>
-      <input
-        key={id}
-        onKeyDown={handleKeyDown}
-        onChange={handleChange}
-        type={"text"}
-        value={value}
-        className={`${ShowEditInput ? "editInput" : ""} `}
-        ref={inputRef}
-      />
-    </div>
+    <input
+      type="text"
+      value={value}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
+      ref={inputRef}
+      autoFocus
+      spelcheck="off"
+    />
   );
 };
 

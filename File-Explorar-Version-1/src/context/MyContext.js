@@ -1,8 +1,9 @@
-import { createContext, useState, Provider } from "react";
+import React from "react";
+import { createContext, useState } from "react";
 import data from "../data";
 export const MyContext = createContext();
 
-const FileContextWrapper = ({ children }) => {
+const FileContextWrapper = React.memo(({ children }) => {
   const [nodeData, setNodeData] = useState(data);
 
   const deleteOperation = (id) => {
@@ -17,15 +18,17 @@ const FileContextWrapper = ({ children }) => {
     // Now we nestedly remove all the related data of that id
     const nestedQueue = [id]; // initially we put the current deleted id
     while (nestedQueue.length > 0) {
-      let currentId = nestedQueue.shift();
+      let currentId = nestedQueue.pop();
       if (nodeData[currentId].children) {
         nestedQueue.push(...nodeData[currentId].children);
       }
-      delete nodeData[currentId];
-      setNodeData(updatedDataAfterDelete);
+      // delete nodeData[currentId];
+      delete updatedDataAfterDelete[currentId];
     }
+    setNodeData(updatedDataAfterDelete);
   };
 
+  // jo "id" aa rahi hai vah new node ka parent ban jayega
   const addNode = (parentId, value) => {
     console.log("add run");
     // check we create folder or file
@@ -41,16 +44,45 @@ const FileContextWrapper = ({ children }) => {
       children: [],
     };
     const DataAfterAddingNewData = { ...nodeData, [newId]: newData };
-    DataAfterAddingNewData[parentId]?.children.unshift(newId);
-    console.log(DataAfterAddingNewData);
+    DataAfterAddingNewData[parentId]?.children.push(newId);
+    // console.log(DataAfterAddingNewData);
     setNodeData(DataAfterAddingNewData);
   };
 
+  const UpdateNode = (Ownid, value) => {
+    console.log("update", Ownid, value);
+    const updatedNodeData = {
+      ...nodeData,
+      // Update the specific item with Ownid
+      [Ownid]: {
+        ...nodeData[Ownid],
+        name: value,
+      },
+    };
+    if (nodeData[Ownid].type == "folder") {
+      if (value.split(".")[1]) {
+        console.log(
+          "It is already folder then it does not support any '.' extension"
+        );
+        return;
+      }
+    } else {
+      if (!value.split(".")[1]) {
+        console.log("It is already file then it must have extension(.)");
+        return;
+      }
+    }
+    console.log(updatedNodeData);
+    setNodeData(updatedNodeData);
+  };
+
   return (
-    <MyContext.Provider value={{ nodeData, deleteOperation, addNode }}>
+    <MyContext.Provider
+      value={{ nodeData, deleteOperation, addNode, UpdateNode }}
+    >
       {children}
     </MyContext.Provider>
   );
-};
+});
 
 export default FileContextWrapper;

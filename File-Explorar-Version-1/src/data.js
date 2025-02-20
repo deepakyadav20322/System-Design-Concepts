@@ -1,4 +1,4 @@
-export default fileExplorerData = {
+const fileExplorerData = {
   1: {
     id: 1,
     name: "File Explorer",
@@ -126,3 +126,6 @@ export default fileExplorerData = {
     children: [],
   },
 };
+
+
+export default fileExplorerData;

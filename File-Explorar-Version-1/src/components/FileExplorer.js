@@ -144,7 +144,7 @@ import { MyContext } from "../context/MyContext";
 import Input from "./Input";
 
 const FileExplorer = ({ id = 1 }) => {
-  const { nodeData, deleteOperation, addNode } = useContext(MyContext);
+  const { nodeData, deleteOperation, addNode,UpdateNode } = useContext(MyContext);
   const [showFolder, setShowFolder] = useState(false);
   const [showAddInput, setShowAddInput] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -161,24 +161,21 @@ const FileExplorer = ({ id = 1 }) => {
         {/* Inline container for name and action buttons */}
         <span className="node-content">
           {/* Render inline editing input or the name */}
-          {!isEditing ? (
-            <span
-              onClick={() =>
-                node.type === "folder" && setShowFolder(!showFolder)
-              }
-              className="filename"
-            >
-              {node.name}
-            </span>
-          ) : (
-            <input
-              type="text"
-              defaultValue={node.name}
-              className="editInput"
-              onBlur={() => setIsEditing(false)}
-              autoFocus
-            />
-          )}
+          <span
+            onClick={() => node.type === "folder" && setShowFolder(!showFolder)}
+            className="filename"
+          >
+            {!isEditing ? (
+              node.name
+            ) : (
+              <Input
+                id={id}
+                name={node.name}
+                setShowInput={setIsEditing}
+                submit={UpdateNode}
+              />
+            )}
+          </span>
 
           {/* Button to add a node */}
           {nodeData[id]?.type === "folder" && (
@@ -192,7 +189,8 @@ const FileExplorer = ({ id = 1 }) => {
           {/* Button to toggle inline editing */}
 
           <span onClick={() => setIsEditing(!isEditing)} className="editNode">
-            {isEditing ? "✔️" : "✏️"}
+            {/* {isEditing ? "✔️" : "✏️"} */}
+            {isEditing ? "" : "✏️"}
           </span>
 
           {/* Button to delete (only if not the root) */}
