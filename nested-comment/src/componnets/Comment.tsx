@@ -9,6 +9,7 @@ const Comments = ({
   onEditComment,
   editContent,
   setEditContent,
+  onDeleteComment,
 }: {
   commentTree: IcommentData;
   content: string;
@@ -17,6 +18,7 @@ const Comments = ({
   setEditContent: Dispatch<SetStateAction<string>>;
   onSubmitComment: (commentId: number, content: string) => void;
   onEditComment: (commentId: number, content: string) => void;
+  onDeleteComment: (commentId: number) => void;
 }) => {
   // const [commentTreeData,setCommentTreeData] = useState<IcommentData[]>(commentTree)
 
@@ -65,6 +67,12 @@ const Comments = ({
             className="cursor-pointer"
           >
             Reply
+          </button>
+          <button
+            onClick={() => onDeleteComment(commentTree.id)}
+            className="cursor-pointer text-red-500"
+          >
+            Delete
           </button>
           {!isEdit ? (
             <button
@@ -118,6 +126,7 @@ const Comments = ({
               onEditComment={onEditComment}
               editContent={editContent}
               setEditContent={setEditContent}
+              onDeleteComment={onDeleteComment}
             />
           </div>
         ))}

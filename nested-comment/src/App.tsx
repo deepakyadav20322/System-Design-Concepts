@@ -6,6 +6,8 @@ import NestedComment from "./componnets/Nested-comment";
 const App = () => {
   const [commentData, setCommentData] =
     useState<IcommentData[]>(initialCommentData);
+
+
   return (
     <>
       <div className="py-4 text-center font-semibold">Nested Comment SDQ</div>

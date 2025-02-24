@@ -9,7 +9,7 @@ const NestedComment = ({ commentTree }: { commentTree: IcommentData[] }) => {
   const [content, setContent] = useState<string>("");
   const [editContent, setEditContent] = useState<string>("");
 
-  const { addCommentNode, editNode } = useCommentHook({
+  const { addCommentNode, editNode ,deleteNode} = useCommentHook({
     commentTreeData,
     setCommentTreeData,
   });
@@ -20,9 +20,14 @@ const NestedComment = ({ commentTree }: { commentTree: IcommentData[] }) => {
   const handleEditSubmit = (commentId: number, content: string) => {
     editNode(commentId, content);
   };
-  //    const handleDelete = ()=>{
+     const handleDeleteComment = (commentId:number)=>{
+        deleteNode(commentId);
 
-  //    }
+     }
+
+     if(commentTreeData && commentTreeData?.length==0){
+        return <p> No any comment available</p>
+    }
 
   return (
     <div className="overflow-hidden">
@@ -37,7 +42,8 @@ const NestedComment = ({ commentTree }: { commentTree: IcommentData[] }) => {
             onEditComment={handleEditSubmit}
             setEditContent={setEditContent}
             editContent={editContent}
-            //   onDeleteComment={}
+            onDeleteComment={handleDeleteComment}
+         
           />
         ))}
     </div>
