@@ -1,14 +1,20 @@
-import React from "react"
+import { useState } from "react";
+import initialCommentData from "./data.json";
+import { IcommentData } from "./types";
 
-
-function App() {
-
+import NestedComment from "./componnets/Nested-comment";
+const App = () => {
+  const [commentData, setCommentData] =
+    useState<IcommentData[]>(initialCommentData);
   return (
-    <div className='text-center w-full py-6'>
-      <p>Welcome</p>
-      This is starting point of nested comment system design question
-    </div>
-  )
-}
+    <>
+      <div className="py-4 text-center font-semibold">Nested Comment SDQ</div>
 
-export default App
+      <div className="text-center w-full py-6 relative max-w-5xl mx-auto border-2 min-h-[100vh]">
+        <NestedComment commentTree={commentData} />
+      </div>
+    </>
+  );
+};
+
+export default App;
