@@ -7,8 +7,6 @@ const useCoommentHook = ({
   commentTreeData: IcommentData[];
   setCommentTreeData: Dispatch<SetStateAction<IcommentData[]>>;
 }) => {
-
-
   // add the comment and replies on besis of comming Id:-
   const addCommentNode = (
     tree: IcommentData[],
@@ -76,20 +74,37 @@ const useCoommentHook = ({
     tree: IcommentData[],
     commentId: number
   ): IcommentData[] => {
-    return tree
-      .filter((comment) => comment.id !== commentId)
-      .map((comments,ind) => {
-        if (comments.replies && comments.replies.length) {
-          return {
-            ...comments,
-            replies: deleteNode(comments.replies, commentId) || [],
-          };
-        }
-       console.log(ind)
-        return comments;
-      });
+    const filterData = tree.filter((comment) => comment.id !== commentId); // it delete the comment at top level
+
+    return filterData.map((comments, ind) => {
+      if (comments.replies && comments.replies.length > 0) {
+        return {
+          ...comments,
+          replies: deleteNode(comments.replies, commentId),
+        };
+      }
+      console.log(ind);
+      return comments;
+    });
   };
 
+  const upVote = (tree:IcommentData[],commentId:number,vote:number):IcommentData[]=>{
+    return tree.map((comment)=>{
+        if(comment.id===commentId){
+           return {
+            ...comment,
+            votes:vote+1
+           }
+        }
+        else if(comment.replies && comment.replies.length>0){
+          return {
+            ...comment,
+            replies: upVote(comment.replies,commentId,vote)
+          }
+        }
+        return comment;
+      })
+  }
   // Function to update state immutably
   const handleAddComment = (commentId: number, content: string) => {
     setCommentTreeData((prevTree) =>
@@ -104,10 +119,15 @@ const useCoommentHook = ({
   const handleDeleteComment = (CommentId: number) => {
     setCommentTreeData((prevTree) => deleteNode(prevTree, CommentId));
   };
+
+  const handleUpvoteComment = (CommentId:number,vote:number)=>{
+    setCommentTreeData(prevTree=>upVote(prevTree,CommentId,vote))
+  } 
   return {
     addCommentNode: handleAddComment,
     editNode: handleEditComment,
     deleteNode: handleDeleteComment,
+    upVote:handleUpvoteComment
   };
 };
 

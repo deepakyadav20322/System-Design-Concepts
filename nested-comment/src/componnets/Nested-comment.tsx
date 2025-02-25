@@ -9,7 +9,7 @@ const NestedComment = ({ commentTree }: { commentTree: IcommentData[] }) => {
   const [content, setContent] = useState<string>("");
   const [editContent, setEditContent] = useState<string>("");
 
-  const { addCommentNode, editNode ,deleteNode} = useCommentHook({
+  const { addCommentNode, editNode ,deleteNode,upVote} = useCommentHook({
     commentTreeData,
     setCommentTreeData,
   });
@@ -24,6 +24,9 @@ const NestedComment = ({ commentTree }: { commentTree: IcommentData[] }) => {
         deleteNode(commentId);
 
      }
+     const handleUpvote = (commentId:number,vote:number)=>{
+         upVote(commentId,vote)
+     }
 
      if(commentTreeData && commentTreeData?.length==0){
         return <p> No any comment available</p>
@@ -33,6 +36,7 @@ const NestedComment = ({ commentTree }: { commentTree: IcommentData[] }) => {
     <div className="overflow-hidden">
       {commentTreeData &&
         commentTreeData.map((comment) => (
+         
           <Comments
             key={comment.id + ""}
             commentTree={comment}
@@ -43,8 +47,10 @@ const NestedComment = ({ commentTree }: { commentTree: IcommentData[] }) => {
             setEditContent={setEditContent}
             editContent={editContent}
             onDeleteComment={handleDeleteComment}
+            onUpVote={handleUpvote}
          
           />
+         
         ))}
     </div>
   );

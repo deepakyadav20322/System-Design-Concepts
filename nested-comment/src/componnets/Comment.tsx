@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import  { Dispatch, SetStateAction, useState } from "react";
 import { IcommentData } from "../types";
+import { getRelativeTime } from "../timeFarmationg";
 
 const Comments = ({
   commentTree,
@@ -10,6 +11,7 @@ const Comments = ({
   editContent,
   setEditContent,
   onDeleteComment,
+  onUpVote,
 }: {
   commentTree: IcommentData;
   content: string;
@@ -19,6 +21,7 @@ const Comments = ({
   onSubmitComment: (commentId: number, content: string) => void;
   onEditComment: (commentId: number, content: string) => void;
   onDeleteComment: (commentId: number) => void;
+  onUpVote:(commentId:number,vote:number)=>void;
 }) => {
   // const [commentTreeData,setCommentTreeData] = useState<IcommentData[]>(commentTree)
 
@@ -42,18 +45,20 @@ const Comments = ({
 
   return (
     <>
-      <div className="w-full p-2 text-start border-2 mx-2 my-1 ">
+      <div className="w-full p-2 text-start border-2 mx-2 my-1 border-l-3 border-l-cyan-600 rounded-xl ">
         <div className="flex justify-start items-center gap-x-4 pb-4">
           <span className="h-10 w-10 rounded-full border-black border-2 flex justify-center items-center">
             😄
           </span>
           <span className="font-bold">UserName{commentTree?.id}</span>
-          <span className="text-sm font-medium">1h ago</span>
+          <span className="text-red-500">👍- {commentTree.votes} </span>
+          <span className="text-sm font-medium">{"("}{getRelativeTime(commentTree.timestamp)}{")"}</span>
         </div>
         {/* {Here we show the content of coment or replies} */}
         {isEdit ? (
           <textarea
-            className="border-green-400 border-2 w-full my-2 p-1"
+            className="border-green-400 border-2 w-full my-2 p-1 outline-0"
+            autoFocus
             onChange={(e) => setEditContent(e.target.value)}
             value={editContent || commentTree.content}
           />
@@ -64,35 +69,35 @@ const Comments = ({
         <div className="flex justify-start items-center gap-x-4">
           <button
             onClick={() => setIsReplyMode(!isReplymode)}
-            className="cursor-pointer"
+            className="cursor-pointer border-2 bg-blue-400 text-white rounded-2xl p-2 py-1"
           >
             Reply
           </button>
           <button
             onClick={() => onDeleteComment(commentTree.id)}
-            className="cursor-pointer text-red-500"
+            className="cursor-pointer bg-red-500 border-2  text-white rounded-2xl p-2 py-1"
           >
             Delete
           </button>
           {!isEdit ? (
             <button
               onClick={() => setIsedit(!isEdit)}
-              className="cursor-pointer"
+              className="cursor-pointer border-2 bg-slate-300 text-black rounded-2xl px-3 py-1"
             >
               Edit
             </button>
           ) : (
-            <button className="" onClick={handleEditSubmit}>
-              Submit
+            <button className=" cursor-pointer border-2 bg-green-400 text-white rounded-2xl p-2 py-1" onClick={handleEditSubmit}>
+              Submit Edit
             </button>
           )}
           <button
             onClick={() => setShowReply(!showReply)}
-            className="cursor-pointer"
+            className="cursor-pointer border-2 hover:border-b-blue-400 px-1"
           >
             show Reply
           </button>
-          <button className="cursor-pointer">Upvote</button>
+          <button onClick={(e)=>onUpVote(commentTree.id,commentTree?.votes ?? 0)} className="cursor-pointer">Upvote</button>
         </div>
 
         {isReplymode && (
@@ -127,6 +132,7 @@ const Comments = ({
               editContent={editContent}
               setEditContent={setEditContent}
               onDeleteComment={onDeleteComment}
+              onUpVote={onUpVote}
             />
           </div>
         ))}

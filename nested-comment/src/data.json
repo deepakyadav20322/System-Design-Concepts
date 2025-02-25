@@ -3,13 +3,13 @@
       "id": 1,
       "content": "This is the first comment",
       "votes": 5,
-      "timestamp": "2024-06-16T10:00:00Z",
+      "timestamp": "2024-09-16T10:00:00Z",
       "replies": [
         {
           "id": 2,
           "content": "This is a reply to the first comment",
           "votes": 3,
-          "timestamp": "2024-06-16T11:00:00Z",
+          "timestamp": "2024-12-16T11:00:00Z",
           "replies": []
         },
         {
@@ -25,7 +25,7 @@
       "id": 4,
       "content": "This is the second comment",
       "votes": 10,
-      "timestamp": "2024-06-16T09:00:00Z",
+      "timestamp": "2025-01-16T09:00:00Z",
       "replies": [
         {
           "id": 5,
