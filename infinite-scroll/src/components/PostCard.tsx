@@ -2,9 +2,9 @@ import { IPostCard } from "../types";
 
 const PostCard = ({ postCardData }: { postCardData: IPostCard }) => {
   return (
-    <div className="max-w-[80rem] mx-auto w-full border-2 border-black rounded-xl p-2 flex gap-x-6 flex-row justify-center items-center gap-x-8 ">
+    <div className="max-w-[80rem] mx-auto w-full border-2 border-black rounded-xl p-2 flex gap-x-6 flex-row justify-center items-center overflow-hidden ">
       <img
-        className="w-64 h-64"
+        className="w-64 h-64 object-contain"
         src={`${postCardData.download_url}`}
         alt={postCardData.id}
       />

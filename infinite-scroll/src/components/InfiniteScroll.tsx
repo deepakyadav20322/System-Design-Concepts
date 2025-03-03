@@ -1,40 +1,35 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 import PostCard from "./PostCard";
 import { IPostCard } from "../types";
 
-const InfiniteScroll = () => {
-  const [pageNo, setPageNo] = useState(1);
-  const [loading, setLoading] = useState(false);
+const InfiniteScroll: React.FC = () => {
+  const [pageNo, setPageNo] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
   const [list, setList] = useState<IPostCard[]>([]);
-
-  // here we define the type present and future both because it change into different conditions
   const observer = useRef<IntersectionObserver | null>(null);
+  const [containerHeight, setContainerHeight] = useState<number>(0);
 
-  const fetchData =useCallback( async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(
         `https://picsum.photos/v2/list?page=${pageNo}&limit=6`
       );
-      console.log(pageNo)
-      const data = await response.json();
-      console.log(data);
+      const data: IPostCard[] = await response.json();
       setList((prev) => [...prev, ...data]);
       setPageNo((prevPage) => prevPage + 1);
     } catch (error) {
-      console.log(error);
+      console.error("Fetch error:", error);
     } finally {
       setLoading(false);
     }
-  },[pageNo])
+  }, [pageNo]);
 
-  // implement intrensic observer
   const listLastNodeRef = useCallback(
-    (node: any) => {
-        if(loading) return
-      if (observer.current) {
-        observer.current.disconnect();
-      }
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver(
         (entries) => {
@@ -42,33 +37,72 @@ const InfiniteScroll = () => {
             fetchData();
           }
         },
-        { threshold: 1 }
+        { threshold: 0.75 }
       );
 
       if (node) observer.current.observe(node);
     },
-    [loading,fetchData]
+    [loading, fetchData]
   );
 
   useEffect(() => {
     fetchData();
-    console.log("page rerender")
   }, []);
 
+
+  // List  me height number me hono chahiye isliye ham dynamically height calculate kar rahe hai and we set it into List.
+  useEffect(() => {
+    // Calculate height dynamically
+    const updateHeight = () => {
+      setContainerHeight(window.innerHeight - 20);
+    };
+  
+    updateHeight(); // Set initial height
+    window.addEventListener("resize", updateHeight);
+  
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+
+
+
+
+
+  // React-Window Row Renderer(har ek row kaisa hona chahiye vo yaha se difine hoga...)
+  const Row = ({ index, style }: ListChildComponentProps) => {
+    if (index === list.length - 1) {
+      return (
+        <div ref={listLastNodeRef} style={style} key={list[index].id}>
+          <PostCard postCardData={list[index]} />
+        </div>
+      );
+    }
+    return (
+      <div style={style} key={list[index].id}>
+        <PostCard postCardData={list[index]} />
+      </div>
+    );
+  };
+
   return (
-    <>
-      {list.map((postCardData, ind) => {
-        if (list.length == ind + 1) {
-          return (
-            <div ref={listLastNodeRef} key={postCardData.url} >
-              <PostCard postCardData={postCardData} />
-            </div>
-          );
-        } else {
-          return <PostCard key={postCardData.id} postCardData={postCardData} />;
-        }
-      })}
-    </>
+   
+    <div className="border border-red-300 h-[calc(100vh-80px)] overflow-hidden">
+       
+      <List
+      height={containerHeight}
+      // height={600}
+      itemCount={list.length}
+      itemSize={300}
+      width="100%"
+      >
+      {Row}
+      </List>
+      {loading && (
+      <div className="flex justify-center p-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+      </div>
+      )}
+    </div>
+
   );
 };
 

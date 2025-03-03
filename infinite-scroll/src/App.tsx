@@ -1,5 +1,5 @@
 import InfiniteScroll from "./components/InfiniteScroll"
-
+// import InfiniteScroll from "./components/WihoutVirTualization"
 
 function App() {
 
