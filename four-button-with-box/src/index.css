@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+*{
+  padding: 0;
+  margin: 0;
+ box-sizing: border-box;
+}
+
+.button {
+  background-color: black;
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
+  font-weight: bold;
+   border: 2px solid blue;     /* remove border from 100vh*/
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+
+}
+
+.horizontal-b{
+width: 40px;
+height: 100%;
+}
+
+.vertical-b{
+height: 40px;
+width: 100%;
+}
